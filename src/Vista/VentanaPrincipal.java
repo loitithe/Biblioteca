@@ -1,5 +1,6 @@
 package Vista;
 
+import java.awt.Color;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -12,6 +13,7 @@ public class VentanaPrincipal extends JFrame {
 
 	public VentanaPrincipal() {
 		setTitle("APP BIBLIOTECA");
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 392, 279);
 		contentPane = new JPanel();
@@ -19,7 +21,7 @@ public class VentanaPrincipal extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-
+		contentPane.setBackground(Color.DARK_GRAY);
 		JButton btnAlquilarLibro = new JButton("Alquilar libro");
 		btnAlquilarLibro.setBounds(220, 57, 131, 23);
 		contentPane.add(btnAlquilarLibro);
@@ -43,5 +45,9 @@ public class VentanaPrincipal extends JFrame {
 		JButton btnHistorico = new JButton("Ver histórico");
 		btnHistorico.setBounds(220, 130, 131, 23);
 		contentPane.add(btnHistorico);
+
+		setVisible(true);
+		setLocationRelativeTo(null);
+		setSize(400, 250);
 	}
 }
