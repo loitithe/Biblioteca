@@ -50,7 +50,7 @@ public class VentanaVerHistorico extends JDialog {
 				new String[] { "Codigo", "Socio", "Fecha alquiler", "Fecha devolucion" }));
 		table.getColumnModel().getColumn(2).setPreferredWidth(95);
 		table.getColumnModel().getColumn(3).setPreferredWidth(106);
-		setSize(450, 250);
+		setSize(450, 300);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setVisible(true);

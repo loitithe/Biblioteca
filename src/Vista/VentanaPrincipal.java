@@ -71,6 +71,7 @@ public class VentanaPrincipal extends JFrame {
 		JButton btnHistorico = new JButton("Ver histórico");
 		btnHistorico.setBounds(220, 130, 131, 23);
 		btnHistorico.setActionCommand("historico");
+		btnHistorico.addActionListener(controlador);
 		contentPane.add(btnHistorico);
 
 		setVisible(true);
