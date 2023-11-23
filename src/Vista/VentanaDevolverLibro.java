@@ -1,21 +1,33 @@
 package Vista;
 
-
 import java.awt.Font;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-public class VentanaDevolverLibro extends JFrame {
+import Controlador.Controlador;
+
+public class VentanaDevolverLibro extends JDialog {
 
 	private JPanel contentPane;
 	private JTextField textCodigo;
+	private Controlador controlador;
 
-	public VentanaDevolverLibro() {
+	public void setControlador(Controlador controlador) {
+		this.controlador = controlador;
+	}
+
+	public void ejecutar() {
+		initComponents();
+
+	}
+
+	void initComponents() {
 		setTitle("APP BIBLIOTECA");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 448, 258);
@@ -42,11 +54,24 @@ public class VentanaDevolverLibro extends JFrame {
 
 		JButton btnDevolver = new JButton("Devolver");
 		btnDevolver.setBounds(294, 178, 89, 23);
+		btnDevolver.setActionCommand("devolver");
+		btnDevolver.addActionListener(controlador);
 		contentPane.add(btnDevolver);
 
 		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.setActionCommand("cancelar");
+		btnCancelar.addActionListener(controlador);
 		btnCancelar.setBounds(51, 178, 89, 23);
 		contentPane.add(btnCancelar);
+
+		setLocationRelativeTo(null);
+		setSize(450, 250);
+		setVisible(true);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+	}
+
+	public VentanaDevolverLibro(JFrame parent, boolean modal) {
+		super(parent, modal);
 	}
 
 }

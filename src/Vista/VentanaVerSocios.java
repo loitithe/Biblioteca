@@ -1,8 +1,8 @@
 package Vista;
 
-
 import java.awt.Font;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -11,13 +11,17 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-public class VentanaVerSocios extends JFrame {
+public class VentanaVerSocios extends JDialog {
 
 	private JPanel contentPane;
 	private JTable table;
 	private JScrollPane scrollPane;
 
-	public VentanaVerSocios() {
+	public void ejecutar() {
+		initComponents();
+	}
+
+	void initComponents() {
 		setTitle("APP BIBLIOTECA");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -39,5 +43,13 @@ public class VentanaVerSocios extends JFrame {
 		table = new JTable();
 		scrollPane.setViewportView(table);
 		table.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "DNI", "Nombre", "Apellidos" }));
+		setSize(450, 320);
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setVisible(true);
+	}
+
+	public VentanaVerSocios(JFrame parent, boolean modal) {
+		super(parent, modal);
 	}
 }

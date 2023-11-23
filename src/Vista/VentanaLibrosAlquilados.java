@@ -1,6 +1,5 @@
 package Vista;
 
-
 import java.awt.Font;
 
 import javax.swing.JFrame;
@@ -17,7 +16,7 @@ public class VentanaLibrosAlquilados extends JFrame {
 	private JTable table;
 	private JScrollPane scrollPane;
 
-	public VentanaLibrosAlquilados() {
+	void initComponents() {
 		setTitle("APP BIBLIOTECA");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -39,5 +38,19 @@ public class VentanaLibrosAlquilados extends JFrame {
 		table = new JTable();
 		scrollPane.setViewportView(table);
 		table.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Codigo", "Titulo", "Socio", "Fecha" }));
+		setSize(450, 250);
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setVisible(true);
+		setVisible(true);
+		setLocationRelativeTo(null);
+		setSize(500, 300);
+	}
+
+	public VentanaLibrosAlquilados(VentanaPrincipal vista, boolean b) {
+	}
+
+	public void ejecutar() {
+		initComponents();
 	}
 }

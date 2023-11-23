@@ -1,8 +1,8 @@
 package Vista;
 
-
 import java.awt.Font;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -11,13 +11,21 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-public class VentanaVerHistorico extends JFrame {
+public class VentanaVerHistorico extends JDialog {
 
 	private JPanel contentPane;
 	private JTable table;
 	private JScrollPane scrollPane;
 
-	public VentanaVerHistorico() {
+	public VentanaVerHistorico(VentanaPrincipal vista, boolean b) {
+		super(vista, b);
+	}
+
+	public void ejecutar() {
+		initComponents();
+	}
+
+	private void initComponents() {
 		setTitle("APP BIBLIOTECA");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -42,6 +50,10 @@ public class VentanaVerHistorico extends JFrame {
 				new String[] { "Codigo", "Socio", "Fecha alquiler", "Fecha devolucion" }));
 		table.getColumnModel().getColumn(2).setPreferredWidth(95);
 		table.getColumnModel().getColumn(3).setPreferredWidth(106);
+		setSize(450, 250);
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setVisible(true);
 	}
 
 }

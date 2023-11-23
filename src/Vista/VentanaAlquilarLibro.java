@@ -1,22 +1,34 @@
 package Vista;
 
-
 import java.awt.Font;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-public class VentanaAlquilarLibro extends JFrame {
+import Controlador.Controlador;
+
+public class VentanaAlquilarLibro extends JDialog {
 
 	private JPanel contentPane;
 	private JTextField textCodigo;
 	private JTextField textDNI;
+	private Controlador controlador;
 
-	public VentanaAlquilarLibro() {
+	public void setControlador(Controlador controlador) {
+		this.controlador = controlador;
+	}
+
+	public void ejecutar() {
+		initComponents();
+	}
+
+	private void initComponents() {
+
 		setTitle("APP BIBLIOTECA");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -53,10 +65,23 @@ public class VentanaAlquilarLibro extends JFrame {
 
 		JButton btnAlquilar = new JButton("Alquilar");
 		btnAlquilar.setBounds(306, 227, 89, 23);
+		btnAlquilar.setActionCommand("alquilar");
+		btnAlquilar.addActionListener(controlador);
 		contentPane.add(btnAlquilar);
 
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.setBounds(26, 227, 89, 23);
+		btnCancelar.setActionCommand("cancelar");
+		btnCancelar.addActionListener(controlador);
 		contentPane.add(btnCancelar);
+
+		setSize(450, 250);
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setVisible(true);
+	}
+
+	public VentanaAlquilarLibro(JFrame parent, boolean modal) {
+		super(parent, modal);
 	}
 }
