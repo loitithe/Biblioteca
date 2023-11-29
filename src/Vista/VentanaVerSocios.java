@@ -15,6 +15,17 @@ public class VentanaVerSocios extends JDialog {
 
 	private JPanel contentPane;
 	private JTable table;
+
+	public void updateTable(String[][] datos) {
+		String[] columnheader = new String[] { "DNI", "Nombre", "Apellidos" };
+		DefaultTableModel model = new DefaultTableModel(columnheader, 0);
+		for (int i = 0; i < datos[i].length; i++) {
+			for (int j = 0; j < datos[i][j].length(); j++) {
+				model.addRow(new Object[]{datos[i][j],datos[i][j],datos[i][j]});
+			}
+		}
+	}
+
 	private JScrollPane scrollPane;
 
 	public void ejecutar() {
@@ -52,4 +63,5 @@ public class VentanaVerSocios extends JDialog {
 	public VentanaVerSocios(JFrame parent, boolean modal) {
 		super(parent, modal);
 	}
+
 }

@@ -50,6 +50,8 @@ public class Controlador implements ActionListener {
                 break;
             case "socios":
                 ventanaVerSocios = new VentanaVerSocios(vista, true);
+                ventanaVerSocios.updateTable(modelo.getSocios());
+
                 ventanaVerSocios.ejecutar();
                 break;
             case "alquilados":
