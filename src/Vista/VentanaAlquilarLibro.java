@@ -16,7 +16,15 @@ public class VentanaAlquilarLibro extends JDialog {
 
 	private JPanel contentPane;
 	private JTextField textCodigo;
+	public JTextField getTextCodigo() {
+		return textCodigo;
+	}
+
 	private JTextField textDNI;
+	public JTextField getTextDNI() {
+		return textDNI;
+	}
+
 	private Controlador controlador;
 
 	public void setControlador(Controlador controlador) {
@@ -64,13 +72,13 @@ public class VentanaAlquilarLibro extends JDialog {
 		contentPane.add(lblDni);
 
 		JButton btnAlquilar = new JButton("Alquilar");
-		btnAlquilar.setBounds(306, 227, 89, 23);
+		btnAlquilar.setBounds(306, 180, 100, 23);
 		btnAlquilar.setActionCommand("alquilar");
 		btnAlquilar.addActionListener(controlador);
 		contentPane.add(btnAlquilar);
 
 		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(26, 227, 89, 23);
+		btnCancelar.setBounds(26, 180, 100, 23);
 		btnCancelar.setActionCommand("cancelar");
 		btnCancelar.addActionListener(controlador);
 		contentPane.add(btnCancelar);

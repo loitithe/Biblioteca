@@ -37,12 +37,14 @@ public class Controlador implements ActionListener {
                 ventanaAlquilarLibro.ejecutar();
                 System.err.println(ventanaAlquilarLibro.isActive());
                 break;
-            case "devolver":
-                System.err.println("pasa");
+            case "devolucion":
                 ventanaDevolverLibro = new VentanaDevolverLibro(vista, true);
                 ventanaDevolverLibro.setControlador(this);
                 ventanaDevolverLibro.ejecutar();
                 System.err.println(ventanaDevolverLibro.isActive());
+                break;
+            case "devolver":
+                modelo.devolverLibro(ventanaDevolverLibro.getTextCodigo().getText());
                 break;
             case "disponibles":
                 ventanaLibrosDisponibles = new VentanaLibrosDisponibles(vista, true);
@@ -50,9 +52,8 @@ public class Controlador implements ActionListener {
                 break;
             case "socios":
                 ventanaVerSocios = new VentanaVerSocios(vista, true);
-                ventanaVerSocios.updateTable(modelo.getSocios());
+                ventanaVerSocios.ejecutar(modelo.getSocios());
 
-                ventanaVerSocios.ejecutar();
                 break;
             case "alquilados":
                 ventanaLibrosAlquilados = new VentanaLibrosAlquilados(vista, true);
@@ -64,7 +65,8 @@ public class Controlador implements ActionListener {
                 break;
 
             case "alquilar":
-
+                modelo.agregarAlquiler(ventanaAlquilarLibro.getTextCodigo().getText(),
+                        ventanaAlquilarLibro.getTextDNI().getText());
                 break;
             case "cancelar":
                 if (ventanaAlquilarLibro != null) {

@@ -16,6 +16,11 @@ public class VentanaDevolverLibro extends JDialog {
 
 	private JPanel contentPane;
 	private JTextField textCodigo;
+	
+	public JTextField getTextCodigo() {
+		return textCodigo;
+	}
+
 	private Controlador controlador;
 
 	public void setControlador(Controlador controlador) {

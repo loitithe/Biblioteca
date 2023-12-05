@@ -46,7 +46,7 @@ public class VentanaPrincipal extends JFrame {
 
 		JButton btnDevolverLibro = new JButton("Devolver libro");
 		btnDevolverLibro.setBounds(220, 91, 131, 23);
-		btnDevolverLibro.setActionCommand("devolver");
+		btnDevolverLibro.setActionCommand("devolucion");
 		btnDevolverLibro.addActionListener(controlador);
 		contentPane.add(btnDevolverLibro);
 
