@@ -4,7 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class Modelo {
-    Connection connection;
+    private static Connection connection;
 
     public Modelo() {
         connection = Connect.getInstance();
@@ -113,24 +113,24 @@ public class Modelo {
             if (existeLibro(codLibro) && libroAlquilado(codLibro)) {
                 // Obtener el ID del alquiler para este libro
                 int idAlquiler = obtenerIdAlquiler(codLibro);
-    
+
                 // Iniciar una transacción
                 connection.setAutoCommit(false);
-    
+
                 try {
                     // Paso 1: Actualizar la tabla alquiler (fecha_devolucion)
                     String queryAlquiler = "UPDATE alquiler SET fecha_devolucion = current_timestamp WHERE cod_alquiler = ?";
                     try (PreparedStatement pstAlquiler = connection.prepareStatement(queryAlquiler)) {
                         pstAlquiler.setInt(1, idAlquiler);
                         int affectedRowsAlquiler = pstAlquiler.executeUpdate();
-    
+
                         // Paso 2: Actualizar la tabla libros (disponible)
                         if (affectedRowsAlquiler > 0) {
                             String queryLibros = "UPDATE libros SET disponible = true WHERE cod_libro = ?";
                             try (PreparedStatement pstLibros = connection.prepareStatement(queryLibros)) {
                                 pstLibros.setString(1, codLibro);
                                 int affectedRowsLibros = pstLibros.executeUpdate();
-    
+
                                 if (affectedRowsLibros > 0) {
                                     System.out.println("Libro devuelto con éxito.");
                                     // Commit si ambas actualizaciones fueron exitosas
@@ -162,6 +162,7 @@ public class Modelo {
             e.printStackTrace();
         }
     }
+
     private boolean libroAlquilado(String codLibro) {
         int count = 0;
         String query = "SELECT COUNT(*) FROM alquiler WHERE cod_libro = ? AND fecha_devolucion IS NULL";
@@ -170,12 +171,12 @@ public class Modelo {
             try (ResultSet rs = pst.executeQuery()) {
                 rs.next();
                 count = rs.getInt(1);
-               
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-         return (count > 0);
+        return (count > 0);
     }
 
     private int obtenerIdAlquiler(String codLibro) throws SQLException {
@@ -191,7 +192,6 @@ public class Modelo {
 
     public String[][] getSocios() {
         String[][] socios = null;
-
         Socio socio;
         try {
             Statement st = connection.createStatement();
@@ -199,7 +199,6 @@ public class Modelo {
             ResultSet rs = st.executeQuery(query);
             int numCols = rs.getMetaData().getColumnCount();
             ArrayList<Socio> lista_socios = new ArrayList<>();
-
             while (rs.next()) {
                 socio = new Socio();
                 for (int i = 1; i <= numCols; i++) {
@@ -233,25 +232,70 @@ public class Modelo {
         return socios;
     }
 
-}
-
-class Connect {
-    private String bd = "biblioteca", server = "localhost", user = "root", password = "1234";
-    private String url = String.format("jdbc:mysql://%s:3306/%s", server, bd);
-    private static Connection conexion;
-
-    private Connect() {
+    public String[][] getHistorico() {
+        String[][] historico = null;
+        int contadorHistorico = 0;
         try {
-            Connect.conexion = DriverManager.getConnection(url, user, password);
+            Statement st = connection.createStatement();
+            String query = "Select * from alquiler ; ";
+            ResultSet rs = st.executeQuery(query);
+            int numCols = rs.getMetaData().getColumnCount();
+
+            while (rs.next()) {
+                contadorHistorico++;
+            }
+            historico = new String[contadorHistorico][4];
+            rs = st.executeQuery(query);
+            while (rs.next()) {
+                System.out.println("pasa");
+                for (int i = 0; i < historico.length; i++) {
+                    for (int j = 1; j <= numCols; j++) {
+                        if (rs.getMetaData().getColumnName(j).equals("cod_libro")) {
+                            historico[i][0] = rs.getString(j);
+                        }
+                        if (rs.getMetaData().getColumnName(j).equals("dni_socio")) {
+                            historico[i][1] = rs.getString(j);
+                        }
+                        if (rs.getMetaData().getColumnName(j).equals("fecha_inicio")) {
+                            historico[i][2] = rs.getString(j);
+                        }
+                        if (rs.getMetaData().getColumnName(j).equals("fecha_devolucion")) {
+                            historico[i][3] = rs.getString(j);
+                        }
+                    }
+                }
+
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return historico;
     }
 
-    public static Connection getInstance() {
-        if (Connect.conexion == null)
-            new Connect();
-        return Connect.conexion;
+    public String[][] getLibrosAlquilados() {
+        String[][] libros_alquilados = null;
+        
+    }
 
+    static class Connect {
+        private String bd = "biblioteca", server = "localhost", user = "root", password = "abc123";
+        private String url = String.format("jdbc:mysql://%s:3306/%s", server, bd);
+        private static Connection conexion;
+
+        private Connect() {
+            try {
+                Connect.conexion = DriverManager.getConnection(url, user, password);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public static Connection getInstance() {
+            if (Connect.conexion == null)
+                new Connect();
+            return Connect.conexion;
+
+        }
     }
 }

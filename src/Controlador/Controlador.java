@@ -61,7 +61,7 @@ public class Controlador implements ActionListener {
                 break;
             case "historico":
                 ventanaVerHistorico = new VentanaVerHistorico(vista, true);
-                ventanaVerHistorico.ejecutar();
+                ventanaVerHistorico.ejecutar(modelo.getHistorico());
                 break;
 
             case "alquilar":

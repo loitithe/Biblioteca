@@ -17,12 +17,29 @@ public class VentanaVerHistorico extends JDialog {
 	private JTable table;
 	private JScrollPane scrollPane;
 
+	private DefaultTableModel model;
+
+	public void updateTable(String[][] datos) {
+		model.setRowCount(0); // Limpiar el modelo antes de agregar nuevas filas
+
+		for (int i = 0; i < datos.length; i++) {
+			if (datos[i].length == 4) {
+				model.addRow(new Object[] { datos[i][0], datos[i][1], datos[i][2],datos[i][3] });
+			} else {
+				System.out.println("Error: La fila " + i + " no tiene la longitud esperada.");
+			}
+		}
+
+	}
+
 	public VentanaVerHistorico(VentanaPrincipal vista, boolean b) {
 		super(vista, b);
 	}
 
-	public void ejecutar() {
+	public void ejecutar(String[][]datos) {
 		initComponents();
+		updateTable(datos);
+		setVisible(true);
 	}
 
 	private void initComponents() {
@@ -46,14 +63,15 @@ public class VentanaVerHistorico extends JDialog {
 
 		table = new JTable();
 		scrollPane.setViewportView(table);
-		table.setModel(new DefaultTableModel(new Object[][] {},
-				new String[] { "Codigo", "Socio", "Fecha alquiler", "Fecha devolucion" }));
+		model = new DefaultTableModel(new Object[][] {},
+				new String[] { "Codigo", "Socio", "Fecha alquiler", "Fecha devolucion" });
+		table.setModel(model);
 		table.getColumnModel().getColumn(2).setPreferredWidth(95);
 		table.getColumnModel().getColumn(3).setPreferredWidth(106);
 		setSize(450, 300);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setVisible(true);
+	
 	}
 
 }
