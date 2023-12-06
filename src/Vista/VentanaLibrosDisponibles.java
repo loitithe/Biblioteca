@@ -15,6 +15,20 @@ public class VentanaLibrosDisponibles extends JFrame {
 	private JPanel contentPane;
 	private JTable table;
 	private JScrollPane scrollPane;
+	private DefaultTableModel model;
+
+	public void updateTable(String[][] datos) {
+		model.setRowCount(0); // Limpiar el modelo antes de agregar nuevas filas
+
+		for (int i = 0; i < datos.length; i++) {
+			if (datos[i].length == 4) {
+				model.addRow(new Object[] { datos[i][0], datos[i][1], datos[i][2] });
+			} else {
+				System.out.println("Error: La fila " + i + " no tiene la longitud esperada.");
+			}
+		}
+
+	}
 
 	void initComponents() {
 		setTitle("APP BIBLIOTECA");
@@ -37,18 +51,21 @@ public class VentanaLibrosDisponibles extends JFrame {
 
 		table = new JTable();
 		scrollPane.setViewportView(table);
-		table.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Codigo", "Titulo", "Autor" }));
+		model = new DefaultTableModel(new Object[][] {}, new String[] { "Codigo", "Titulo", "Autor" });
+		table.setModel(model);
 		setSize(450, 300);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setVisible(true);
+
 	}
 
 	public VentanaLibrosDisponibles(VentanaPrincipal vista, boolean b) {
 	}
 
-	public void ejecutar() {
+	public void ejecutar(String[][] datos) {
 		initComponents();
+		updateTable(datos);
+		setVisible(true);
 	}
 
 }

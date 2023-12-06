@@ -2,6 +2,7 @@ package Modelo;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Modelo {
     private static Connection connection;
@@ -40,10 +41,23 @@ public class Modelo {
         return existe;
     }
 
+    private boolean isLibroDisponible(String codLibro) {
+        try {
+            Statement st = connection.createStatement();
+            String query = "SELECT disponible FROM libros WHERE cod_libro = '" + codLibro + "';";
+            ResultSet rs = st.executeQuery(query);
+            if (rs.next()) {
+                return rs.getBoolean("disponible");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
     public void agregarAlquiler(String codLibro, String dniSocio) {
         try {
             // Verificar si el libro y el socio existen
-            if (existeLibro(codLibro) && existeSocio(dniSocio)) {
+            if (existeLibro(codLibro) && existeSocio(dniSocio) && isLibroDisponible(codLibro)) {
                 // Iniciar una transacción
                 connection.setAutoCommit(false);
 
@@ -232,54 +246,127 @@ public class Modelo {
         return socios;
     }
 
-    public String[][] getHistorico() {
-        String[][] historico = null;
-        int contadorHistorico = 0;
-        try {
-            Statement st = connection.createStatement();
-            String query = "Select * from alquiler ; ";
-            ResultSet rs = st.executeQuery(query);
-            int numCols = rs.getMetaData().getColumnCount();
+public String[][] getHistorico() {
+    String[][] historico = null;
+    List<String[]> historicoList = new ArrayList<>();
 
-            while (rs.next()) {
-                contadorHistorico++;
-            }
-            historico = new String[contadorHistorico][4];
-            rs = st.executeQuery(query);
-            while (rs.next()) {
-                System.out.println("pasa");
-                for (int i = 0; i < historico.length; i++) {
-                    for (int j = 1; j <= numCols; j++) {
-                        if (rs.getMetaData().getColumnName(j).equals("cod_libro")) {
-                            historico[i][0] = rs.getString(j);
-                        }
-                        if (rs.getMetaData().getColumnName(j).equals("dni_socio")) {
-                            historico[i][1] = rs.getString(j);
-                        }
-                        if (rs.getMetaData().getColumnName(j).equals("fecha_inicio")) {
-                            historico[i][2] = rs.getString(j);
-                        }
-                        if (rs.getMetaData().getColumnName(j).equals("fecha_devolucion")) {
-                            historico[i][3] = rs.getString(j);
-                        }
-                    }
+    try {
+        Statement st = connection.createStatement();
+        String query = "SELECT * FROM alquiler";
+        ResultSet rs = st.executeQuery(query);
+        int numCols = rs.getMetaData().getColumnCount();
+
+        while (rs.next()) {
+            String[] filaHistorico = new String[4]; // Nueva fila para cada registro
+            for (int j = 1; j <= numCols; j++) {
+                if (rs.getMetaData().getColumnName(j).equals("cod_libro")) {
+                    filaHistorico[0] = rs.getString(j);
                 }
-
+                if (rs.getMetaData().getColumnName(j).equals("dni_socio")) {
+                    filaHistorico[1] = rs.getString(j);
+                }
+                if (rs.getMetaData().getColumnName(j).equals("fecha_inicio")) {
+                    filaHistorico[2] = rs.getString(j);
+                }
+                if (rs.getMetaData().getColumnName(j).equals("fecha_devolucion")) {
+                    filaHistorico[3] = rs.getString(j);
+                }
             }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+            historicoList.add(filaHistorico);
         }
-        return historico;
+
+        // Convierte la lista a una matriz bidimensional
+        historico = historicoList.toArray(new String[0][0]);
+
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return historico;
+}
 
     public String[][] getLibrosAlquilados() {
         String[][] libros_alquilados = null;
-        
+
+        try {
+            // Utiliza un Statement con un ResultSet de tipo scrollable
+            Statement st = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            String query = "SELECT alquiler.*, libros.title AS libro_titulo FROM alquiler JOIN libros ON alquiler.cod_libro = libros.cod_libro WHERE alquiler.fecha_devolucion IS NULL;";
+            ResultSet rs = st.executeQuery(query);
+            int numCols = rs.getMetaData().getColumnCount();
+
+            // Obtén el número de filas en el conjunto de resultados
+            rs.last();
+            int numRows = rs.getRow();
+            rs.beforeFirst();
+
+            libros_alquilados = new String[numRows][4];
+
+            int row = 0;
+            while (rs.next()) {
+                for (int j = 1; j <= numCols; j++) {
+                    if (rs.getMetaData().getColumnName(j).equals("cod_alquiler")) {
+                        libros_alquilados[row][0] = rs.getString(j);
+                    }
+                    if (rs.getMetaData().getColumnName(j).equals("title")) {
+                        libros_alquilados[row][1] = rs.getString(j);
+                    }
+                    if (rs.getMetaData().getColumnName(j).equals("dni_socio")) {
+                        libros_alquilados[row][2] = rs.getString(j);
+                    }
+                    if (rs.getMetaData().getColumnName(j).equals("fecha_inicio")) {
+                        libros_alquilados[row][3] = rs.getString(j);
+                    }
+                }
+                row++;
+            }
+        } catch (SQLException e) {
+            // Maneja la excepción de manera adecuada para tu aplicación
+            e.printStackTrace();
+        }
+        return libros_alquilados;
+    }
+
+    public String[][] getLibrosDisponibles() {
+        String[][] libros_disponibles = null;
+
+        try {
+            // Utiliza un Statement con un ResultSet de tipo scrollable
+            Statement st = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            String query = "SELECT * FROM libros where disponible = true";
+            ResultSet rs = st.executeQuery(query);
+            int numCols = rs.getMetaData().getColumnCount();
+
+            // Obtén el número de filas en el conjunto de resultados
+            rs.last();
+            int numRows = rs.getRow();
+            rs.beforeFirst();
+
+            libros_disponibles = new String[numRows][4];
+
+            int row = 0;
+            while (rs.next()) {
+                for (int j = 1; j <= numCols; j++) {
+                    if (rs.getMetaData().getColumnName(j).equals("cod_libro")) {
+                        libros_disponibles[row][0] = rs.getString(j);
+                    }
+                    if (rs.getMetaData().getColumnName(j).equals("title")) {
+                        libros_disponibles[row][1] = rs.getString(j);
+                    }
+                    if (rs.getMetaData().getColumnName(j).equals("author")) {
+                        libros_disponibles[row][2] = rs.getString(j);
+                    }
+                }
+                row++;
+            }
+        } catch (SQLException e) {
+            // Maneja la excepción de manera adecuada para tu aplicación
+            e.printStackTrace();
+        }
+        return libros_disponibles;
     }
 
     static class Connect {
-        private String bd = "biblioteca", server = "localhost", user = "root", password = "abc123";
+        private String bd = "biblioteca", server = "localhost", user = "root", password = "1234";
         private String url = String.format("jdbc:mysql://%s:3306/%s", server, bd);
         private static Connection conexion;
 
